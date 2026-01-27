@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+message: "If you use this framework or its derivations in your research, please cite it as below."
+authors:
+- family-names: "Porter"
+  given-names: "Eric Keaton"
+title: "The Holographic Projector Framework (HPF) v8.0"
+version: 8.0.0
+date-released: 2026-01-28
+url: "https://github.com/your-username/your-repo-name"
+abstract: >-
+  A resolution-limited, information-theoretic model in which spacetime, matter, 
+  and gauge structure emerge from discrete holographic projection at the 10^-19m scale.
+keywords:
+  - physics
+  - holographic-principle
+  - quantum-gravity
+  - information-theory
