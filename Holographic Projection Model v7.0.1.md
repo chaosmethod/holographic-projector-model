@@ -52,7 +52,7 @@ This value is order-unity consistent with the observed Dark Energy density.
 
 ## 2. Environmental Scaling: The Sgr A* Breathing Effect
 
-The core revelation of HPM v7.0 is the **Environmental Scaling Law**.  
+The core revelation of HPM v7.0.1 is the **Environmental Scaling Law**.  
 The coherence length $L_{\text{coh}}$ dynamically responds to local overdensity $\delta$:
 
 $$
