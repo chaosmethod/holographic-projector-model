@@ -9,7 +9,7 @@
 
 ## Purpose
 
-`HPF_Engine.py` implements the **Holographic Projector Framework (HPF) Stability Function**.
+`HPF_Engine.py` implements the **Holographic Projection Framework (HPF) Stability Function**.
 
 The engine:
 
