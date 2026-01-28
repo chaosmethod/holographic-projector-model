@@ -3,13 +3,12 @@ message: "If you use this framework or its derivations in your research, please 
 authors:
 - family-names: "Porter"
   given-names: "Eric Keaton"
-title: "The Holographic Projection Framework (HPF) v8.0"
-version: 8.0.0
+title: "The Holographic Projection Framework (HPF)"
 date-released: 2026-01-28
-url: "https://github.com/chaosmethod/holographic-projector-model/blob/main/Holographic%20Projector%20Framework.md"
+url: "https://github.com/chaosmethod/holographic-projector-model"
 abstract: >-
   A resolution-limited, information-theoretic model in which spacetime, matter, 
-  and gauge structure emerge from discrete holographic projection at the 10^-19m scale.
+  and gauge structure emerge from a discrete holographic projection, with phenomenology consistent with a coherence scale near ~10⁻¹⁹ m.
 keywords:
   - physics
   - holographic-principle
