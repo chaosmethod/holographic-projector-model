@@ -35,7 +35,7 @@ $$
 
 Where:
 
-* $S_f$      : Information flux / “satiation” (dimensionless)
+* $S_f$      : Information Flux Ratio (Input Density / Capacity Limit)
 * $\zeta$    : Probability of a state remaining localized
 * $\lambda$  : Empirically calibrated Lu-equilibrium threshold (~1.05)
 * $k$       : Slope of the transition
