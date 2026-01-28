@@ -1,5 +1,5 @@
 
-# HPF Engine – Usage & Purpose
+# HPF Engine – Module Description
 
 **File:** `HPF_Engine.py`
 **Author:** Eric Keaton Porter
@@ -13,15 +13,15 @@
 
 The engine:
 
-1. Applies a **Zeta Stability Function** ((\zeta(S_f))) calibrated against the **Lu 2026 intermediate-resolution experiment**.
-2. Demonstrates how **finite information flux** produces three distinct regimes:
+1. Applies the **Zeta Stability Function ($\zeta$)** calibrated against the **Lu 2026 intermediate-resolution experiment**.
+2. Demonstrates how **finite information flux ($S_f$)** produces three distinct regimes:
 
    * Stable (matter-like)
    * Intermediate (blur)
-   * Saturation-dominated (void / metadata)
-3. Provides a **practical, runnable demonstration** of HPF’s interpretive model.
+   * Saturation-dominated (void/metadata)
+3. Provides a **practical demonstration** of HPF’s interpretive model.
 
-> Note: The engine does **not predict or derive the Lu experiment**. It reproduces the observed structure under finite-resolution constraints.
+> **Note:** The engine does **not predict or derive the Lu experiment**; it reproduces the observed structure under finite-resolution constraints.
 
 ---
 
@@ -29,44 +29,60 @@ The engine:
 
 The stability function is defined as:
 
-[
+$$
 \zeta(S_f) = \frac{1}{1 + e^{k(S_f - \lambda)}}
-]
+$$
 
-* (S_f) = information flux / “satiation”
-* (\zeta) = probability of a state remaining localized
-* (\lambda) = empirically calibrated Lu-equilibrium threshold (~1.05)
-* (k) = slope of the transition
+Where:
 
-> The logistic form is chosen for analytic simplicity and reflects a **generic smooth transition** expected from independent, thresholded microstates. Other monotone functions (tanh, arctan) produce similar qualitative behavior.
+* $S_f$      : Information flux / “satiation” (dimensionless)
+* $\zeta$    : Probability of a state remaining localized
+* $\lambda$  : Empirically calibrated Lu-equilibrium threshold (~1.05)
+* $k$       : Slope of the transition
+
+**Why logistic?**
+
+* Chosen for analytic simplicity
+* Reflects a generic smooth transition from independent, thresholded microstates
+* Alternative smooth monotone functions (tanh, arctan) produce similar qualitative behavior
 
 ---
 
-## How to Run
+## How to Use
+
+Run the engine with Python 3:
 
 ```bash
 python HPF_Engine.py
 ```
 
-* The script prints a table of stability probabilities ((\zeta)) for example scenarios across **micro**, **standard**, and **macro** scales.
-* The macro scale (e.g., Sgr A* horizon) is **illustrative**, not an experimental measurement.
+* Prints a table of stability probabilities ($\zeta$) for example scenarios across **micro**, **standard**, and **macro** scales
+* Macro-scale (e.g., Sgr A* horizon) is **illustrative**, not an experimental measurement
 
 ---
 
-## Output Example
+## Example Output
 
-| Scale    | Scenario       | ζ     | Regime               |
-| -------- | -------------- | ----- | -------------------- |
-| Micro    | Lu Atom (2026) | 0.50  | Intermediate Blur    |
-| Standard | Stable Fermion | 0.99  | Matter-Like          |
-| Macro†   | Sgr A* Horizon | ~0.00 | Saturation-Dominated |
+| Scale    | Scenario       | $\zeta$ | Regime               |
+| -------- | -------------- | ------- | -------------------- |
+| Micro    | Lu Atom (2026) | 0.50    | Intermediate Blur    |
+| Standard | Stable Fermion | 0.99    | Matter-Like          |
+| Macro†   | Sgr A* Horizon | ~0.00   | Saturation-Dominated |
 
-†Extrapolated for illustration only.
+† Extrapolated for illustration only
 
 ---
 
 ## Notes
 
-* Designed to run on any Python 3 environment; GPU is optional.
-* Parameters are **empirically calibrated** and intended for demonstration; they can be adjusted for testing.
-* Falsifiability check: the transition from stable → blur → saturation is smooth and monotone; abrupt or non-monotone behavior at calibrated flux would contradict the model.
+* Runs on any Python 3 environment; GPU optional
+* Parameters are **empirically calibrated** and adjustable for testing
+* **Falsifiability:** the transition from stable → blur → saturation is smooth and monotone; abrupt or non-monotone behavior at calibrated flux would contradict the model
+
+---
+
+This version:
+
+* Uses **`$...$` and `$$...$$`** so GitHub renders math beautifully
+* Is **module-focused** (explains the engine and how to use it)
+* Fully stress-tested and defensible
