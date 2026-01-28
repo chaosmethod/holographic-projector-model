@@ -33,3 +33,10 @@ This engine is designed to run on high-performance compute nodes (RTX 3090/4090)
 - Einstein–Bohr (1927)  
 - Lu et al. (2026)  
 - EHT Sgr A (2026)
+
+### Runnable Engine
+The **HPF stability engine** is implemented in the file `hpf_engine.py`.  
+Run it to see the Zeta function applied across scales — it reproduces the table above and demonstrates the unified threshold calibration.
+
+```bash
+python hpf_engine.py
