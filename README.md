@@ -11,7 +11,7 @@ $$
 
 | Symbol | Definition | Context |
 | :---: | :--- | :--- |
-| $\zeta$ | **Stability Probability** | 1.0 = Matter, 0.0 = Void |
+| $S_f$ | Information Flux Ratio | Input Density / Capacity Limit (Dimensionless) |
 | $S_f$ | **Information Flux** | The "Reynolds Number" of spacetime |
 | $\lambda$ | **The Lu Threshold** | The bandwidth limit where geometry fails |
 
