@@ -78,11 +78,3 @@ python HPF_Engine.py
 * Runs on any Python 3 environment; GPU optional
 * Parameters are **empirically calibrated** and adjustable for testing
 * **Falsifiability:** the transition from stable → blur → saturation is smooth and monotone; abrupt or non-monotone behavior at calibrated flux would contradict the model
-
----
-
-This version:
-
-* Uses **`$...$` and `$$...$$`** so GitHub renders math beautifully
-* Is **module-focused** (explains the engine and how to use it)
-* Fully stress-tested and defensible
