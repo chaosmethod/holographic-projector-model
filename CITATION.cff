@@ -3,7 +3,7 @@ message: "If you use this framework or its derivations in your research, please 
 authors:
 - family-names: "Porter"
   given-names: "Eric Keaton"
-title: "The Holographic Projector Framework (HPF) v8.0"
+title: "The Holographic Projection Framework (HPF) v8.0"
 version: 8.0.0
 date-released: 2026-01-28
 url: "https://github.com/chaosmethod/holographic-projector-model/blob/main/Holographic%20Projector%20Framework.md"
