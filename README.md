@@ -15,3 +15,5 @@ $$
 | $\lambda$ | **The Lu Threshold** | The bandwidth limit where geometry fails |
 | $k$ | Rendering Slope | Controls transition sharpness between laminar and turbulent regimes |
 > *“Flux saturation determines what persists and what jitters.”*
+
+`Derived modules explore specific consequences of HPF (e.g., gravity, EM propagation). They are logically downstream of the core framework and may be evaluated independently.`
