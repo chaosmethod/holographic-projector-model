@@ -9,7 +9,7 @@
 
 ## 1. The Core Hypothesis
 
-**Gravity is not a force; it is Processing Lag.**
+**Gravitational time dilation can be modeled as renormalization latency in a finite-bandwidth reversible substrate.**
 
 From `HPF_Evolutionary_Regulator.py`, we established that persistent structures must continuously run a **Renormalization Protocol** (mean-centering / variance-scaling) to survive high-entropy flux.
 
