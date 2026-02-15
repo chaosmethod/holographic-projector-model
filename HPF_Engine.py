@@ -27,7 +27,7 @@ The stability function is defined as:
 Where:
 * Sf : Information Flux Ratio (Input Density / Capacity Limit) -> Dimensionless
 * ζ  : Stability Probability (Probability of a state remaining localized)
-* λ  : Lu Threshold (~1.05). The empirically calibrated point where the channel saturates.
+* λ_blur  : Early/pivot threshold (below hard ceiling)
 * k  : Transition Slope. Controls the steepness of the phase change.
 
 ## Usage
