@@ -12,7 +12,8 @@ $$
 | Symbol | Definition | Context |
 | :---: | :--- | :--- |
 | $S_f$ | Information Flux Ratio | Input Density / Capacity Limit (Dimensionless) |
-| $\lambda$ | **The Lu Threshold** | The bandwidth limit where geometry fails |
+| $\lambda^\*$ | **Lu Terminal Threshold** | Entropy-phase collapse boundary where geometric support fails (≈ 5.7889) |
+| $\lambda_{\text{engine}}$ | **Operational Lu Threshold** | Early saturation / blur pivot used by entropy engine (≪ $\lambda^\*$) |
 | $k$ | Rendering Slope | Controls transition sharpness between laminar and turbulent regimes |
 > *“Flux saturation determines what persists and what jitters.”*
 
