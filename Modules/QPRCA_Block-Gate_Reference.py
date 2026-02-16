@@ -1,137 +1,134 @@
-# HPF–QPRCA Block-Gate Pseudocode (Inspectable)
+# QPRCA_Block-Gate_Reference.py
 # ------------------------------------------------------------
-# Lattice: 3D grid with Margolus partitions P0, P1 of 2x2x2 blocks
-# Per site: Dirac subspace D (dim=4) and regulator qubit R (dim=2)
-# Optional block-local ancilla qubit A used transiently (must be uncomputed)
+# HPF–QPRCA Reference Block-Gate Update (with reversible "relaxation")
 #
-# One tick:
-#   for b in P0: U_block(b)
-#   for b in P1: U_block(b)
+# Key addition vs earlier pseudocode:
+#   - A local regulator *memory reservoir* qubit M per site.
+#   - A reversible "leak/relax" implemented as a partial-SWAP (or iSWAP^λ)
+#     between regulator R and memory M, plus optional local scrambling of M.
 #
-# Constraints:
-#   - All operations are unitary
-#   - Strictly local (within block or across a block edge via partition scheduling)
-#   - Ancilla must end returned to |0>
+# This produces effective finite memory time for the regulator when you
+# coarse-grain / ignore M, while keeping the full evolution unitary.
+#
+# Not a full simulator. Intended for inspection and as a reference template.
 # ------------------------------------------------------------
 
+from typing import List, Tuple
+
 # ----------------------------
-# Utility primitives (abstract)
+# Abstract gate primitives
 # ----------------------------
 
-def H(qubit): ...
-def CNOT(ctrl, tgt): ...
-def CTRL_SWAP(ctrl_qubit, regA, regB): ...
-def SWAP(regA, regB): ...
-def CTRL_U(ctrl_qubit, U, reg): ...
+def H(q): ...
+def X(q): ...
+def SWAP(a, b): ...
+def CTRL_SWAP(ctrl, regA, regB): ...
+def CTRL_RY(ctrl, angle, q): ...
+def RY(angle, q): ...
 def U4_on_Dirac(U4, site): ...
-def CTRL_U4_on_Dirac(ctrl_qubit, U4, site): ...
-def RY(angle, qubit): ...
-def CTRL_RY(ctrl_qubit, angle, qubit): ...
-def PHASE(angle, qubit): ...
-def CTRL_PHASE(ctrl_qubit, angle, qubit): ...
+def CTRL_U4_on_Dirac(ctrl, U4, site): ...
+def TWO_QUBIT_UNITARY(U2, q1, q2): ...
+def CTRL_TWO_QUBIT_UNITARY(ctrl, U2, q1, q2): ...
 
-# Notes:
-# - "regA/regB" can be multi-qubit registers (e.g., Dirac 4-dim encoded in 2 qubits)
-# - U4 is a 4x4 unitary applied to the Dirac register (2 qubits)
-# - Angles are discretized / LUT-derived, consistent with finite resolution
-
-
-# --------------------------------------------
-# Model parameters / LUTs (finite-resolution)
-# --------------------------------------------
-
-theta = ...            # base mixing angle ~ m * Δt
-theta_drag_LUT = ...   # optional map from regulator state -> effective theta' (if multi-level)
-eta0 = ...             # base regulator rotation increment per neighbor probe
-kappa = ...            # stiffness / slope for LUT shaping
-LUT_eta = ...          # maps probe outcome -> rotation angle increment (bounded)
-
-# Dirac matrix exponentials (choose representation)
-U_mix_normal = expm(-1j * theta * beta)      # 4x4
-U_mix_drag   = expm(-1j * theta * beta * c_drag)  # 4x4, c_drag in (0,1) or LUT-driven
-
-
-# ------------------------------------------------------------
-# Margolus block representation
-# ------------------------------------------------------------
-# A block b contains 8 sites with coordinates relative to block origin:
-#   (0/1, 0/1, 0/1)
-# We'll refer to sites as s000, s100, s010, ..., s111
-# Each site has:
-#   site.D : Dirac register (dim 4; 2 qubits)
-#   site.R : regulator qubit
-#
-# Neighbors inside a 2x2x2 block along +x, +y, +z exist when coord component = 0.
-# ------------------------------------------------------------
-
-def U_block(block):
+# A "partial swap" can be implemented by iSWAP^λ, or exp(-i λ * SWAP_H) etc.
+# We keep it abstract but insist it is a fixed 2-qubit unitary mixing (R,M).
+def PARTIAL_SWAP(lambda_mix: float):
     """
-    One 2x2x2 Margolus block update:
-      U_block = U_ren * U_stream * U_mix
+    Return a 2-qubit unitary U_rm that interpolates between identity (λ=0)
+    and full SWAP (λ=1). Any standard continuous family is acceptable:
+      - iSWAP**λ (common in QC)
+      - exp(-i * λ * (XX+YY)/2)
+      - exp(-i * λ * SWAP_H)
     """
-    U_ren(block)
-    U_stream(block)
-    U_mix(block)
+    U_rm = ...
+    return U_rm
+
+# ----------------------------
+# Model parameters (finite-resolution)
+# ----------------------------
+
+theta = ...        # base Dirac mixing angle ~ m Δt
+eta0  = ...        # base regulator increment per flagged mismatch probe
+lambda_mix = ...   # regulator-memory mixing strength per tick (0..1)
+mu_scramble = ...  # optional memory "stir" angle (small)
+
+# Dirac mixing unitaries (4x4); choose representation for beta elsewhere
+U_mix_normal = ... # exp(-i * theta * beta)
+U_mix_drag   = ... # exp(-i * theta_drag * beta) or other drag form
 
 
 # ------------------------------------------------------------
-# 1) Renormalization / Regulation layer (gradient-energy proxy)
+# Data model (conceptual)
 # ------------------------------------------------------------
 
-def U_ren(block):
+class Site:
+    # Dirac register (dim=4) encoded in 2 qubits
+    D = None
+    # Regulator qubit (availability)
+    R = None
+    # Regulator memory/reservoir qubit (for reversible relaxation)
+    M = None
+    # Relative coordinate within a 2x2x2 block
+    rel_coord: Tuple[int, int, int]
+
+class Block:
+    sites: List[Site]
+    ancilla = None  # single reusable ancilla qubit A per block for overlap probes
+
+    def site_at(self, cx: int, cy: int, cz: int) -> Site: ...
+
+
+# ------------------------------------------------------------
+# One tick: apply U_block over Margolus partitions P0 then P1
+# ------------------------------------------------------------
+
+def U_block(block: Block):
     """
-    For each site x in block:
-      For each forward neighbor (x+ex, x+ey, x+ez) that exists within block:
-        - perform overlap probe (swap-test style) into ancilla A
-        - rotate regulator R(x) conditioned on ancilla
-        - uncompute ancilla
-    Ancilla is reused; it MUST return to |0>.
+    U_block = U_ren * U_stream * U_mix * U_relax
+
+    Note: We place U_relax after mix/stream by default, but you may move it
+    earlier if you prefer. The only requirement is locality + unitarity.
     """
+    U_ren(block)      # load sensing -> regulator update
+    U_stream(block)   # Dirac transport
+    U_mix(block)      # mass/coin mixing with regulator control
+    U_relax(block)    # reversible relaxation via regulator<->memory mixing
 
-    # Single reusable ancilla qubit, initialized |0>
-    A = block.ancilla  # exists only in pseudocode; in implementation it is a scratch qubit
-    # Ensure A starts in |0> (in actual circuit, it's allocated/reset by design)
-    # No measurement allowed; must be uncomputed each use.
 
-    for site in block.sites:
-        x = site
+# ------------------------------------------------------------
+# 1) Renormalization / Regulation layer (unitary load sensing)
+# ------------------------------------------------------------
 
-        for neighbor in forward_neighbors_within_block(block, x):
-            y = neighbor
+def U_ren(block: Block):
+    """
+    For each site x and each forward neighbor y within the block:
+      - swap-test style overlap probe (unitary, no measurement)
+      - conditionally rotate regulator R(x) (integrate local roughness)
+      - uncompute ancilla back to |0>
+    """
+    A = block.ancilla
 
-            # --- Overlap probe between Dirac registers D(x) and D(y) ---
-            # Standard pattern:
-            #   H(A); controlled-SWAP(A, D(x), D(y)); H(A)
+    for x in block.sites:
+        for y in forward_neighbors_within_block(block, x):
+            # Overlap probe between Dirac registers D(x), D(y)
             H(A)
             CTRL_SWAP(A, x.D, y.D)
             H(A)
 
-            # --- Regulator rotation conditioned on probe ancilla ---
-            # If A=1 (indicating mismatch/roughness in the swap-test basis),
-            # apply a small bounded rotation to x.R
-            #
-            # "No-fuss" fixed increment:
-            #   CTRL_RY(A, eta0, x.R)
-            #
-            # If you want stiffness shaping, replace eta0 with a LUT keyed by A only
-            # (still bounded) or by a multi-ancilla scheme (more complex).
+            # Integrate roughness into regulator:
+            # If A=1, apply bounded increment. (η0 is small, discretized OK.)
             CTRL_RY(A, eta0, x.R)
 
-            # --- Uncompute overlap probe (reverse) ---
+            # Uncompute ancilla
             H(A)
             CTRL_SWAP(A, x.D, y.D)
             H(A)
+            # A returns to |0> exactly in ideal unitary evolution
 
-            # At this point A is back to |0> exactly (unitary uncompute)
 
-
-def forward_neighbors_within_block(block, x):
-    """
-    Return neighbors y = x + ex, x + ey, x + ez that lie inside the 2x2x2 block.
-    Forward-only avoids double counting; still symmetric at large scale due to partition alternation.
-    """
+def forward_neighbors_within_block(block: Block, x: Site) -> List[Site]:
     nbrs = []
-    cx, cy, cz = x.rel_coord  # each in {0,1}
+    cx, cy, cz = x.rel_coord
     if cx == 0: nbrs.append(block.site_at(1, cy, cz))   # +x
     if cy == 0: nbrs.append(block.site_at(cx, 1, cz))   # +y
     if cz == 0: nbrs.append(block.site_at(cx, cy, 1))   # +z
@@ -139,151 +136,139 @@ def forward_neighbors_within_block(block, x):
 
 
 # ------------------------------------------------------------
-# 2) Streaming layer (Dirac transport via conditional SWAP nets)
+# 2) Streaming layer (Dirac transport)
 # ------------------------------------------------------------
 
-def U_stream(block):
-    """
-    Implements discrete-time Dirac streaming in x,y,z directions.
-    Uses disjoint SWAP networks inside the block for each axis.
-    Assumes a fixed mapping of Dirac components to propagation directions.
-
-    Implementation approach:
-      - Represent Dirac 4-dim register as 2 qubits (q0,q1)
-      - Define projectors onto internal "channels" that determine shift direction.
-      - In gate terms, use controlled-SWAPs between neighbor Dirac registers,
-        controlled by internal-state bits (or derived control lines).
-
-    For inspection, we express as abstract operations SHIFT_AXIS(block, axis).
-    """
-
+def U_stream(block: Block):
     SHIFT_AXIS(block, axis='x')
     SHIFT_AXIS(block, axis='y')
     SHIFT_AXIS(block, axis='z')
 
 
-def SHIFT_AXIS(block, axis):
+def SHIFT_AXIS(block: Block, axis: str):
     """
-    Axis shift implemented as parallel neighbor swaps.
-    The exact mapping from Dirac components -> +/- direction is a design choice.
-    Minimal no-fuss mapping:
-      - upper two components (phi) stream +axis
-      - lower two components (chi) stream -axis
-    This can be implemented by conditional swaps between neighbor sites.
+    Abstract: apply disjoint neighbor swaps implementing a Dirac quantum walk.
 
-    Because this is within a 2x2x2 block, neighbor pairs are disjoint.
+    For inspection purposes, we keep "COND_SWAP_PHI/CHI" abstract:
+      - phi (upper components) stream +axis
+      - chi (lower components) stream -axis
     """
-
     pairs_plus, pairs_minus = neighbor_pairs_for_axis(block, axis)
 
-    # Stream phi (+axis): swap phi-subspace between x and x+axis
     for (x, y) in pairs_plus:
-        # conditional swap only for phi components of Dirac register
-        # Implement as controlled swaps on the Dirac register bits that encode phi-vs-chi.
         COND_SWAP_PHI(x.D, y.D)
 
-    # Stream chi (-axis): swap chi-subspace between x and x-axis
     for (x, y) in pairs_minus:
         COND_SWAP_CHI(x.D, y.D)
 
 
-def neighbor_pairs_for_axis(block, axis):
-    """
-    Returns disjoint neighbor pairs for +axis and -axis streaming inside the block.
-    In a 2x2x2 block, these are simply edges along that axis.
-    """
-    plus = []
-    minus = []
-
-    for site in block.sites:
-        cx, cy, cz = site.rel_coord
+def neighbor_pairs_for_axis(block: Block, axis: str):
+    plus, minus = [], []
+    for s in block.sites:
+        cx, cy, cz = s.rel_coord
         if axis == 'x' and cx == 0:
             plus.append((block.site_at(0, cy, cz), block.site_at(1, cy, cz)))
-            # minus uses the same physical swap set; direction is encoded by which components swap
             minus.append((block.site_at(1, cy, cz), block.site_at(0, cy, cz)))
-
         if axis == 'y' and cy == 0:
             plus.append((block.site_at(cx, 0, cz), block.site_at(cx, 1, cz)))
             minus.append((block.site_at(cx, 1, cz), block.site_at(cx, 0, cz)))
-
         if axis == 'z' and cz == 0:
             plus.append((block.site_at(cx, cy, 0), block.site_at(cx, cy, 1)))
             minus.append((block.site_at(cx, cy, 1), block.site_at(cx, cy, 0)))
-
     return plus, minus
 
 
-def COND_SWAP_PHI(Dx, Dy):
-    """
-    Swap only the phi (upper) components between two Dirac registers.
-    Implementation depends on Dirac encoding.
-    If Dirac register is 2 qubits, you can define:
-      |00>,|01> = phi components
-      |10>,|11> = chi components
-    Then phi swap is controlled on the MSB == 0.
-    """
-    # Abstract form:
-    #   if MSB(D)==0: SWAP(state between Dx and Dy)
-    CTRL_SWAP(ctrl_qubit=MSB_is_zero_control(Dx, Dy), regA=Dx, regB=Dy)
-
-
-def COND_SWAP_CHI(Dx, Dy):
-    """
-    Swap only the chi (lower) components.
-    Using same encoding, controlled on MSB == 1.
-    """
-    CTRL_SWAP(ctrl_qubit=MSB_is_one_control(Dx, Dy), regA=Dx, regB=Dy)
-
-
-def MSB_is_zero_control(Dx, Dy):
-    """
-    Returns a control line that is 1 when the relevant internal-state MSB indicates phi.
-    In practice, this is implemented by using the MSB qubit (possibly with X gates).
-    Shown abstractly for inspection.
-    """
-    ...
-
-
-def MSB_is_one_control(Dx, Dy):
-    """
-    Control line for chi components (MSB==1).
-    """
-    ...
+def COND_SWAP_PHI(Dx, Dy): ...
+def COND_SWAP_CHI(Dx, Dy): ...
 
 
 # ------------------------------------------------------------
-# 3) Mixing layer (mass term with regulator-controlled drag)
+# 3) Mixing layer (mass/coin with regulator-controlled drag)
 # ------------------------------------------------------------
 
-def U_mix(block):
-    """
-    Apply site-local Dirac mixing U_mix, controlled by regulator R.
-    - If R=0: normal mixing (theta)
-    - If R=1: dragged mixing (theta')
-    This is the causal mechanism for dilation/latency.
-    """
-    for site in block.sites:
-        r = site.R
-        # Control: if r==0 apply normal, if r==1 apply drag.
-        # The simplest inspection-friendly implementation uses two controlled applications:
-        #
-        #   if r==0: apply U_mix_normal
-        #   if r==1: apply U_mix_drag
-        #
-        # In circuit form, you implement one as control-on-1, and the other as control-on-0 (with X wrappers).
-        APPLY_CONTROLLED_MIX(site, U_mix_normal, U_mix_drag)
+def U_mix(block: Block):
+    for s in block.sites:
+        APPLY_CONTROLLED_MIX(s)
 
 
-def APPLY_CONTROLLED_MIX(site, U0, U1):
+def APPLY_CONTROLLED_MIX(site: Site):
+    """
+    Apply U_mix_normal when R=0 and U_mix_drag when R=1.
+
+    If you later want smoother control than binary:
+      - replace R with a multi-level register, or
+      - encode control via R+M together (2-bit LUT), still local and unitary.
+    """
     r = site.R
 
-    # Apply U0 when r=0
-    X(r)                   # flip so r=0 becomes control=1
-    CTRL_U4_on_Dirac(r, U0, site.D)
+    # Control-on-0 for normal mix
+    X(r)
+    CTRL_U4_on_Dirac(r, U_mix_normal, site.D)
     X(r)
 
-    # Apply U1 when r=1
-    CTRL_U4_on_Dirac(r, U1, site.D)
+    # Control-on-1 for drag mix
+    CTRL_U4_on_Dirac(r, U_mix_drag, site.D)
 
 
-def X(qubit): ...
+# ------------------------------------------------------------
+# 4) Reversible relaxation (finite regulator memory time)
+# ------------------------------------------------------------
+
+def U_relax(block: Block):
+    """
+    Reversible "forgetting" implemented by coupling regulator R to a local
+    memory/reservoir qubit M.
+
+    Mechanism:
+      - Mix R and M with a partial swap: U_rm(λ)
+      - Optionally scramble M a bit so it doesn't just store R forever.
+        (Still unitary; this makes M act more like a reservoir.)
+    """
+    U_rm = PARTIAL_SWAP(lambda_mix)
+
+    for s in block.sites:
+        # Mix regulator with reservoir: spreads/conserves information, but
+        # makes R alone exhibit finite-memory behavior under coarse-graining.
+        TWO_QUBIT_UNITARY(U_rm, s.R, s.M)
+
+        # Optional "stir" of M (keeps reservoir from being a perfect recorder)
+        # In a full model, you could instead couple M to neighbor Ms for diffusion.
+        if mu_scramble is not None:
+            RY(mu_scramble, s.M)
+
+
+# ------------------------------------------------------------
+# Optional extension: reservoir diffusion (still local & unitary)
+# ------------------------------------------------------------
+
+def U_reservoir_diffuse(block: Block, nu: float):
+    """
+    Optional: diffuse reservoir memory across sites to model spatial smoothing
+    of congestion memory without introducing nonunitarity.
+
+    Implement by partial swaps between neighboring M qubits.
+    """
+    U_mm = PARTIAL_SWAP(nu)
+    # Example: diffuse along x edges inside the block
+    for (x, y) in neighbor_pairs_for_axis_M_only(block, axis='x'):
+        TWO_QUBIT_UNITARY(U_mm, x.M, y.M)
+
+
+def neighbor_pairs_for_axis_M_only(block: Block, axis: str):
+    # reuse same neighbor pairing as for streaming, but for M registers
+    pairs_plus, _ = neighbor_pairs_for_axis(block, axis)
+    return pairs_plus
+
+
+# ------------------------------------------------------------
+# Notes for inspection / correctness
+# ------------------------------------------------------------
+# 1) Full evolution remains unitary and local.
+# 2) "Relaxation" is not nonunitary decay; it is reversible coupling of R
+#    to hidden local memory M. If you ignore M, R shows finite-memory behavior.
+# 3) If you want true regulator "fixed points" (metastability), you tune:
+#      - eta0 (integration strength),
+#      - lambda_mix (memory leakage rate),
+#      - mu_scramble (reservoir stirring),
+#      - optionally reservoir diffusion strength nu.
+# 4) For a minimal 1D toy model, keep only one axis and 2-site blocks.
