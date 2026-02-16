@@ -1,16 +1,24 @@
 cff-version: 1.2.0
-message: "If you use this framework or its derivations in your research, please cite it as below."
+message: "If you use this framework or its derivative modules in academic or technical work, please cite as follows."
 authors:
-- family-names: "Porter"
-  given-names: "Eric Keaton"
+  - family-names: "Porter"
+    given-names: "Eric Keaton"
 title: "The Holographic Projection Framework (HPF)"
 date-released: 2026-01-28
-url: "https://github.com/chaosmethod/holographic-projector-model"
+url: "https://github.com/chaosmethod/Holographic-Projection-Framework"
 abstract: >-
-  A resolution-limited, information-theoretic model in which spacetime, matter, 
-  and gauge structure emerge from a discrete holographic projection, with phenomenology consistent with a coherence scale near ~10⁻¹⁹ m.
+  The Holographic Projection Framework (HPF) is a resolution-limited,
+  information-theoretic framework in which spacetime, matter, and gauge
+  structure emerge from discrete, reversible holographic updates.
+  Physical phenomenology arises from entropy saturation, finite resolution,
+  and stability dynamics, with characteristic coherence behavior near
+  ~10⁻¹⁹ m. HPF serves as a unifying theoretical lens supporting multiple
+  modular implementations, including entropy-driven and reversible
+  computational substrates.
 keywords:
   - physics
   - holographic-principle
   - quantum-gravity
   - information-theory
+  - discrete-spacetime
+  - entropy
