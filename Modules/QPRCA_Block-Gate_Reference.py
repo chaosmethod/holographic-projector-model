@@ -2,6 +2,18 @@
 # ------------------------------------------------------------
 # HPF–QPRCA Reference Block-Gate Update (with reversible "relaxation")
 #
+#
+#NOTE:
+#This file describes the intended QPRCA block-gate architecture.
+#For a unitary-verified executable construction, see:
+
+ #   qprca_block_gate_1d.py
+
+#In particular, conditional streaming primitives in this file
+#are schematic and should not be used directly in simulation
+#without ancilla-decoupled control.
+
+
 # Key addition vs earlier pseudocode:
 #   - A local regulator *memory reservoir* qubit M per site.
 #   - A reversible "leak/relax" implemented as a partial-SWAP (or iSWAP^λ)
@@ -9,7 +21,7 @@
 #
 # This produces effective finite memory time for the regulator when you
 # coarse-grain / ignore M, while keeping the full evolution unitary.
-#
+
 # Not a full simulator. Intended for inspection and as a reference template.
 # ------------------------------------------------------------
 
