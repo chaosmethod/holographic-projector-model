@@ -72,25 +72,20 @@ The following equations express the MDEA instantiation of HPF’s regulatory evo
 
 ### Operator Selection
 
-$$
-E^*(X_t)
-=
-\arg\max_{E \in \mathcal{E}}
+$$E^*(X_t)=\arg\max_{E \in \mathcal{E}}
 \left(
 V_{\mathrm{HPF}}(E, X_t)\,
 L_{\mathrm{HPF}}(E, X_t)
-\right)
-$$
+\right)$$
 
 ---
 
 ### State Update
 
-$$
-X_{t+1}
-=
-F_{E^*(X_t)}(X_t)
-$$
+
+$$X_{t+1}=F_{E^*(X_t)}(X_t)$$
+
+
 
 
 ---
