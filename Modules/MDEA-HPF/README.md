@@ -60,4 +60,58 @@ This module implements the **execution layer**, not the legality framework itsel
 - ❌ Not a replacement for GR, QFT, or QM  
 - ❌ Not a quantum gravity proposal  
 
-This module is an **execution architecture**.
+This module is an **execution architecture**
+
+
+## MDEA–HPF Unified Update Law
+
+*MDEA-HPF is a concrete architectural realization of the Holographic Projection Framework (HPF).  
+The following equation expresses the MDEA instantiation of HPF’s regulatory evolution principle.*
+
+---
+
+### Global Evolution Equation
+
+$$
+\boxed{
+X_{t+1}
+=
+F_{\displaystyle
+\arg\max_{E \in \mathcal{E}}
+\left[
+V_{\mathrm{HPF}}(E, X_t)\,
+L_{\mathrm{HPF}}(E, X_t)
+\right]
+}
+\!\left(X_t\right)
+}
+$$
+
+---
+
+### Definitions
+
+- **$X_t$**  
+  Full universe state at discrete step $t$.
+
+- **$\mathcal{E}$**  
+  Set of admissible evolution operators (“experts”), spanning GR, QFT, semiclassical limits, UHET, QPRCA, and related regimes.
+
+- **$F_E$**  
+  Reversible substrate update map associated with operator $E$.
+
+- **$L_{\mathrm{HPF}}(E, X_t) \in \{0,1\}$**  
+  HPF legality functional enforcing hard constraints  
+  (reversibility, finite bandwidth, entropy saturation, $\zeta$-stability).
+
+- **$V_{\mathrm{HPF}}(E, X_t)$**  
+  HPF validity functional scoring how well operator $E$ matches the local regime of $X_t$.
+
+---
+
+### Interpretation
+
+HPF acts as a regulator: it does not prescribe a single universal dynamics, but instead
+selects—at each step—the evolution operator most consistent with the current state and
+global constraints. MDEA-HPF provides a concrete mechanism for realizing this selection
+and update process on a reversible, finite-resolution substrate.
