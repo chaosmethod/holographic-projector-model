@@ -66,26 +66,32 @@ This module is an **execution architecture**
 ## MDEA–HPF Unified Update Law
 
 *MDEA-HPF is a concrete architectural realization of the Holographic Projection Framework (HPF).  
-The following equation expresses the MDEA instantiation of HPF’s regulatory evolution principle.*
+The following equations express the MDEA instantiation of HPF’s regulatory evolution principle.*
 
 ---
 
-### Global Evolution Equation
+### Operator Selection
 
 $$
-\boxed{
-X_{t+1}
+E^*(X_t)
 =
-F_{\displaystyle
 \arg\max_{E \in \mathcal{E}}
-\left[
+\left(
 V_{\mathrm{HPF}}(E, X_t)\,
 L_{\mathrm{HPF}}(E, X_t)
-\right]
-}
-\!\left(X_t\right)
-}
+\right)
 $$
+
+---
+
+### State Update
+
+$$
+X_{t+1}
+=
+F_{E^*(X_t)}(X_t)
+$$
+
 
 ---
 
