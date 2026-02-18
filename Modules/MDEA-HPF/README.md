@@ -1,3 +1,5 @@
+Primary entry: see `MDEA-HPF.md` for the full execution architecture.
+
 # MDEA-HPF  
 **Multi-Domain Execution Architecture regulated by the Holographic Projection Framework**
 
