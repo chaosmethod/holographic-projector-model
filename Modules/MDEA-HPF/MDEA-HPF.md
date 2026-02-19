@@ -177,6 +177,71 @@ $$
 
 ---
 
+### **5.1 — Override Precedence (Simultaneous Hard-Gate Triggers)**
+
+When multiple hard-gate triggers fire in the same region/time window, HPF applies the following precedence ordering:
+
+1. **Geometry Failure dominates execution authority**
+   $[
+   G_{\text{health}} < G_{\text{crit}} ;\Rightarrow; \textbf{route to QPRCA}
+   ]$
+   Rationale: metric / semiclassical execution is illegal when geometry interpretation fails.
+
+2. **Saturation enforces constraints inside the active executor**
+   $[
+   \sigma_{\max} > 1 ;\Rightarrow; \textbf{apply saturation throttling / queuing constraints}
+   ]$
+   If $(G_{\text{health}} \ge G_{\text{crit}})$, the executor may be UHET.
+   If $(G_{\text{health}} < G_{\text{crit}})$, saturation constraints are enforced **within QPRCA execution** (update throttling, reversible redistribution), not by selecting UHET as the executor.
+
+3. **Information-flow overload is treated as a routing event**
+   If entanglement / coherence load exceeds locally maintainable bandwidth, HPF forces **state partitioning** (measurement-as-routing) while preserving reversibility via redistribution into uncontrolled degrees of freedom.
+
+Operationally, in priority order:
+
+Deterministic Override Ordering
+
+Override conditions are evaluated in the following sequence:
+
+Geometry Integrity Check
+
+If $𝐺health<𝐺critGhealth<Gcrit$
+	​
+execution transitions to QPRCA.
+
+Saturation Check
+
+If $𝐺health≥𝐺critand𝜎max>1Ghealth≥Gcritandσmax>1$
+
+execution transitions to UHET.
+
+Otherwise
+
+Proceed to Stage B soft selection among valid experts.
+
+Independent Saturation Enforcement
+
+Whenever
+
+𝜎
+max
+⁡
+>
+1
+σ
+max
+	​
+
+>1
+
+saturation constraints (throttling / reversible redistribution) are applied to the active executor, regardless of which expert is currently executing.
+
+---
+
+This patch is consistent with your existing hard overrides and legality signals in `MDEA-HPF.md`. 
+
+---
+
 ## **6. Application: Regulated Collapse and Evaporation**
 
 ### **Classical Collapse**
