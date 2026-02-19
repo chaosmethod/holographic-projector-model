@@ -242,11 +242,11 @@ where each $(E_i)$ evaluates its own validity envelope against the current state
 - Semiclassical gravity selected  
 
 ### Saturation (UHET)
-- If $σ_max > 1 and G_health ≥ G_crit$, HPF routes to UHET  
+-If $\sigma_{\max} > 1$ and $G_{\text{health}} \ge G_{\text{crit}}$ HPF routes to **UHET**
 - Saturation throttling and entropy budgeting are enforced in all cases
  
 ### **Metric Failure (QPRCA)**
-- If $G_{\text{health}} < G_{\text{crit}}$, HPF routes to **QPRCA**  
+- If $G_{\text{health}} < G_{\text{crit}}$  HPF routes to **QPRCA**  
 - Singularities avoided by forbidding illegal metric execution  
 
 ### **Re‑Emergence**
