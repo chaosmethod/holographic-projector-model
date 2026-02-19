@@ -20,6 +20,10 @@ Through a series of neural-lattice simulations, I identified **three distinct ph
 **Breakthrough:**
 **Renormalization (LayerNorm)** allows the system to survive **Supercritical Entropy ($S_f = 100.0$)**, suggesting that existence is functionally defined by **error correction**.
 
+Anchoring and calibration
+
+The entropic flux scale used in HPF is empirically anchored to the Lu Einstein–Bohr experiment, which fixes a dimensionless midpoint
+λ≈1.05 where localization and interference are balanced. This experiment independently measures a projection-capacity limit of standard quantum mechanics; HPF does not fit this value, but identifies it as the point where distinguishability exhausts available representational resolution. Cosmological and gravitational applications are downstream consequences of this calibration, not inputs.
 ---
 
 ## 2. Experimental Data & Results
@@ -36,6 +40,9 @@ I stress-tested a standard 2D lattice to identify the boundaries of “Raw Physi
 | 3.0          | Quantum / Turbulent    | 0.67                  | Increasing decoherence       |
 | 5.0          | Quantum / Turbulent    | 0.80                  | Near Lu Threshold            |
 | 5.79         | Decoherence / Collapse | 0.89                  | Hard Ceiling / Lu Threshold  |
+
+The appearance of a finite transition band $(1.4≲𝑆𝑓≲5.79$ $1.4≲Sf
+	≲5.79)$ is not model-specific: any finite-bandwidth, variance-sensitive stability functional produces an extended breakdown region rather than a sharp cutoff.
 
 **Conclusions:**
 
