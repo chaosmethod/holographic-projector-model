@@ -19,7 +19,7 @@ Information may be preserved, throttled, or partitioned, but never destroyed.
 Regulated Quantities
 Entanglement Load
 Entanglement contributes to local update pressure:
-Lent(x)⊂Ltot(x)L\_{\\text{ent}}(x) \\subset L\_{\\text{tot}}(x)Lent​(x)⊂Ltot​(x)
+$Lent(x)⊂Ltot(x)L\_{\\text{ent}}(x) \\subset L\_{\\text{tot}}(x)Lent​(x)⊂Ltot​(x)$
 Entanglement is not free; it consumes coherent update capacity.
 
 Decoherence
@@ -60,4 +60,5 @@ Appendix Verdict
 Quantum information flow is regulated execution, not metaphysics.
 Entanglement persists while affordable.
 Decoherence occurs when it is not.
+
 
