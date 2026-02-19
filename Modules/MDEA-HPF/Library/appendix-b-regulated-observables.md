@@ -10,7 +10,7 @@ Observables are inputs to legality, not byproducts of theory.
 
 General Rule
 
-A quantity OOO is an observable iff:
+A quantity OOO is an observable if:
 
 It can be operationally defined
 
@@ -109,4 +109,5 @@ Appendix Verdict
 Observables are currency in MDEA-HPF.
 
  If it can’t be cashed, it can’t be spent.
+
 
