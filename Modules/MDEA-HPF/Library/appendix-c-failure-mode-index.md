@@ -32,7 +32,7 @@ Common in: semiclassical backreaction limits
 
 
 FM-4: Saturation
-Signal: σmax⁡>1\\sigma\_{\\max}>1σmax​>1
+Signal: $σmax⁡>1\\sigma\_{\\max}>1σmax​>1$
 
 Action: UHET override
 
@@ -41,7 +41,7 @@ Common in: extreme EM compactness, collapse
 
 
 FM-5: Geometry Failure
-Signal: Ghealth<0.3G\_{\\text{health}}<0.3Ghealth​<0.3
+Signal: $Ghealth<0.3G\_{\\text{health}}<0.3Ghealth​<0.3$
 
 Action: QPRCA override
 
@@ -62,4 +62,5 @@ Failures terminate or reroute execution.
 Appendix Verdict
 Failure modes are first-class signals.
 Ignoring them is illegal execution.
+
 
