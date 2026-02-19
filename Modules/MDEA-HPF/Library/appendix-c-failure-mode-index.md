@@ -50,7 +50,9 @@ Common in: singularity-approach regimes
 
 
 Design Principle
-If multiple failure modes are active, Geometry Failure takes precedence over Saturation in executor selection.
+
+-If multiple failure modes are active, Geometry Failure takes precedence over Saturation in executor selection.-
+
 No failure mode is allowed to:
 propagate silently
 
@@ -63,6 +65,7 @@ Failures terminate or reroute execution.
 Appendix Verdict
 Failure modes are first-class signals.
 Ignoring them is illegal execution.
+
 
 
 
