@@ -241,10 +241,10 @@ where each $(E_i)$ evaluates its own validity envelope against the current state
 - Irreversibility persists  
 - Semiclassical gravity selected  
 
-### **Saturation (UHET)**
-- If $\sigma_{\max} > 1$, HPF routes to **UHET**  
-- Throttling + entropy budgeting enforced  
-
+### Saturation (UHET)
+- If $σ_max > 1 and G_health ≥ G_crit$, HPF routes to UHET  
+- Saturation throttling and entropy budgeting are enforced in all cases
+ 
 ### **Metric Failure (QPRCA)**
 - If $G_{\text{health}} < G_{\text{crit}}$, HPF routes to **QPRCA**  
 - Singularities avoided by forbidding illegal metric execution  
