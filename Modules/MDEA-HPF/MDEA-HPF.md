@@ -142,103 +142,87 @@ $$
 
 ## **5. Routing Logic**
 
-### **Stage A — Hard Gate (Activation)**
+### **Stage A — Activation**
 
 HPF remains **inactive** if:
 
-$$
-\text{conv} = \text{true}, \qquad
-\text{mig} = \text{false}, \qquad
+$[
+\text{conv} = \text{true}, \quad
+\text{mig} = \text{false}, \quad
 \sigma_{\max} < \sigma_* \quad (\sigma_* = 0.7)
-$$
+]$
 
 HPF **activates** if:
 
-$$
+$[
 \text{mig} = \text{true}
-\quad\text{or}\quad
+\quad \text{or} \quad
 \sigma_{\max} \ge \sigma_* \text{ persistently}
-$$
+]$
 
-### **Override Routes**
+Activation enables hard-gate evaluation and domain selection.
 
-- If $\sigma_{\max} > 1$ → **UHET**  
-- If $G_{\text{health}} < G_{\text{crit}}$ → **QPRCA**
+---
+
+### **Stage A.1 — Hard-Gate Evaluation (Deterministic Order)**
+
+When HPF is active, hard-gate conditions are evaluated in strict priority order:
+
+#### **1. Geometry Integrity**
+
+$[
+G_{\text{health}} < G_{\text{crit}}
+;\Rightarrow;
+\textbf{route to QPRCA}
+]$
+
+Geometry failure takes precedence because metric or semiclassical execution is illegal when geometric coherence is lost.
+
+---
+
+#### **2. Saturation**
+
+$[
+G_{\text{health}} \ge G_{\text{crit}}
+;\land;
+\sigma_{\max} > 1
+;\Rightarrow;
+\textbf{route to UHET}
+]$
+
+Saturation triggers a domain transition only when geometry remains within its validity envelope.
+
+---
+
+#### **3. Otherwise**
+
+If neither hard gate fires, proceed to Stage B soft selection.
+
+---
+
+### **Independent Saturation Enforcement**
+
+Whenever
+
+$[
+\sigma_{\max} > 1
+]$
+
+saturation constraints (update throttling and reversible redistribution) are applied to the active executor, regardless of which expert is executing.
+
+This applies even when execution has already transitioned to QPRCA due to geometry failure.
 
 ---
 
 ### **Stage B — Soft Selection**
 
-Among legal experts $E_i$:
+If no hard-gate condition determines execution, the active domain expert is selected via:
 
-$$
-E^* = \arg\max_i \; E_i.\text{validity}(\text{state}, \text{signals})
-$$
+$[
+E^* = \arg\max_i ; E_i.\text{validity}(\text{state}, \text{signals})
+]$
 
----
-
-### **5.1 — Override Precedence (Simultaneous Hard-Gate Triggers)**
-
-When multiple hard-gate triggers fire in the same region/time window, HPF applies the following precedence ordering:
-
-1. **Geometry Failure dominates execution authority**
-   $[
-   G_{\text{health}} < G_{\text{crit}} ;\Rightarrow; \textbf{route to QPRCA}
-   ]$
-   Rationale: metric / semiclassical execution is illegal when geometry interpretation fails.
-
-2. **Saturation enforces constraints inside the active executor**
-   $[
-   \sigma_{\max} > 1 ;\Rightarrow; \textbf{apply saturation throttling / queuing constraints}
-   ]$
-   If $(G_{\text{health}} \ge G_{\text{crit}})$, the executor may be UHET.
-   If $(G_{\text{health}} < G_{\text{crit}})$, saturation constraints are enforced **within QPRCA execution** (update throttling, reversible redistribution), not by selecting UHET as the executor.
-
-3. **Information-flow overload is treated as a routing event**
-   If entanglement / coherence load exceeds locally maintainable bandwidth, HPF forces **state partitioning** (measurement-as-routing) while preserving reversibility via redistribution into uncontrolled degrees of freedom.
-
-Operationally, in priority order:
-
-Deterministic Override Ordering
-
-Override conditions are evaluated in the following sequence:
-
-Geometry Integrity Check
-
-If $𝐺health<𝐺critGhealth<Gcrit$
-	​
-execution transitions to QPRCA.
-
-Saturation Check
-
-If $𝐺health≥𝐺critand𝜎max>1Ghealth≥Gcritandσmax>1$
-
-execution transitions to UHET.
-
-Otherwise
-
-Proceed to Stage B soft selection among valid experts.
-
-Independent Saturation Enforcement
-
-Whenever
-
-𝜎
-max
-⁡
->
-1
-σ
-max
-	​
-
->1
-
-saturation constraints (throttling / reversible redistribution) are applied to the active executor, regardless of which expert is currently executing.
-
----
-
-This patch is consistent with your existing hard overrides and legality signals in `MDEA-HPF.md`. 
+where each $(E_i)$ evaluates its own validity envelope against the current state and control signals.
 
 ---
 
