@@ -36,9 +36,9 @@ Observable Health Metric
 
 Each observable is assigned a stability score:
 
-HO=fdefinition⋅frefinement⋅fresolutionHO∈\[0,1]H\_O = f\_{\\text{definition}} \\cdot f\_{\\text{refinement}} \\cdot f\_{\\text{resolution}} \\qquad H\_O \\in \[0,1]HO​=fdefinition​⋅frefinement​⋅fresolution​HO​∈\[0,1]
+$HO=fdefinition⋅frefinement⋅fresolutionHO∈\[0,1]H\_O = f\_{\\text{definition}} \\cdot f\_{\\text{refinement}} \\cdot f\_{\\text{resolution}} \\qquad H\_O \\in \[0,1]HO​=fdefinition​⋅frefinement​⋅fresolution​HO​∈\[0,1]$
 
-Observables with HO≪1H\_O \\ll 1HO​≪1 are excluded from routing decisions.
+Observables with $HO≪1H\_O \\ll 1HO​≪1$ are excluded from routing decisions.
 
 
 
@@ -109,5 +109,6 @@ Appendix Verdict
 Observables are currency in MDEA-HPF.
 
  If it can’t be cashed, it can’t be spent.
+
 
 
