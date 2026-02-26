@@ -1,20 +1,129 @@
-I present the Holographic Projection Framework (HPF), a set of axioms and derivations that consolidate necessity arguments for finite resolution from entropy bounds, reversible update bandwidth, and causal locality.
-HPF provides a discrete informational foundation distinct from continuum quantum field theory, resolving singularities and reframing unitarity as a lattice-enforced constraint.
-The framework yields falsifiable departures from classical continuum general relativity, including a specific mechanism for gauge group selection via bandwidth truncation, resolution saturation effects at horizons, and irreducible stochastic jitter.
-## The HPF Signature
+# Holographic Projection Framework (HPF)
 
-The **Zeta Stability Function** defines reality as a bandwidth-limited probability:
+This repository contains the **canonical specification, regulatory architecture, and supporting analyses** for the **Holographic Projection Framework (HPF)** and its associated systems.
 
-$$
-\zeta(S_f) = \frac{1}{1 + e^{k(S_f - \lambda)}}
-$$
+HPF is a **finite-resolution, information-theoretic framework for physics** that enforces **saturation, reversibility, and regime legality** across scales.
 
-| Symbol | Definition | Context |
-| :---: | :--- | :--- |
-| $S_f$ | Information Flux Ratio | Input Density / Capacity Limit (Dimensionless) |
-| $\lambda^\*$ | **Lu Terminal Threshold** | Entropy-phase collapse boundary where geometric support fails (≈ 5.7889) |
-| $\lambda_{\text{engine}}$ | **Operational Lu Threshold** | Early saturation / blur pivot used by entropy engine (≪ $\lambda^\*$) |
-| $k$ | Rendering Slope | Controls transition sharpness between laminar and turbulent regimes |
-> *“Flux saturation determines what persists and what jitters.”*
+---
 
-`Derived modules explore specific consequences of HPF (e.g., gravity, EM propagation). They are logically downstream of the core framework and may be evaluated independently.`
+## Canonical Documents — *Authority Surface*
+
+These files **define meaning, symbols, and executable semantics**.
+Anything outside this set **may not redefine primitives**.
+
+### Primary Texts
+
+* **`HPF.md`**
+  *The HPF White Paper*
+  Defines axioms, constraints, and falsifiable claims.
+
+* **`UHET.md`**
+  *Unified Holographic Entropy Theory*
+  Entropy, saturation, and resolution as governing constraints.
+
+* **`QPRCA.md`**
+  *Quantum-Projection Regulated Causal Architecture*
+  Causal locality, projection rules, and geometric health.
+
+* **`MDEA-HPF.md`**
+  *Multi-Domain Execution Architecture under HPF*
+  How physical regimes are routed and handed off without singularities.
+
+* **`EFT Ladder-HPF Backbone Routing Entry.md`**
+  The canonical execution backbone.
+  All effective field theories must attach to or hand off through this ladder.
+
+* **`Symbol_index.md`**
+  **Canonical translation layer**.
+  Defines all symbols and notation used across primary texts.
+
+---
+
+## Regulations — *Theory Legality & Applicability*
+
+### `Regulations/`
+
+Contains **regulatory entries for individual physical theories**.
+
+Each regulation specifies:
+
+* execution legality under HPF
+* resolution and saturation constraints
+* routing and handoff conditions
+* failure and override behavior
+
+Regulations **do not define theory** — they **govern when and how a theory may execute** under HPF.
+
+**Examples include:**
+
+* General Relativity (GR) regulation entries
+* QFT / EFT regulation entries
+* AdS/CFT applicability entries
+* Semiclassical gravity handoffs
+
+---
+
+## Supporting Documentation — *Explanatory & Evidentiary*
+
+### `Supporting_Docs/`
+
+Documents that **support, elaborate, or test** the canonical framework.
+
+Includes:
+
+* update and evolution dynamics
+* gravity metrics
+* entropy phase behavior
+* empirical calibration
+* numerical demonstrations
+
+These documents **must defer to the canonical texts and the Symbol Index**.
+
+### `Supporting_Docs/Regulation/` *(if present)*
+
+Human-readable regulatory explanations derived from the formal regulation entries.
+
+---
+
+## Python Toy Models — *Non-Authoritative*
+
+### `python_toy_models/`
+
+Exploratory and illustrative Python scripts.
+
+These are **demonstrations only** and are **not part of the formal framework**.
+
+---
+
+## Library — *Appendices & Extracts*
+
+### `Library/`
+
+Public appendices, regulated dualities, and extracted reference material.
+Includes minimal public extracts of internal appendices.
+
+---
+
+## Archive — *Historical / Non-Authoritative*
+
+### `Archive/`
+
+Superseded drafts, legacy simulations, and historical artifacts.
+Retained for transparency only.
+
+---
+
+## Media
+
+### `pictures/`
+
+Figures and plots referenced by supporting documents.
+
+---
+
+## Authority Rule (Explicit)
+
+> **Only root-level canonical documents define HPF, UHET, QPRCA, MDEA, and the EFT Ladder.**
+> Regulations govern applicability.
+> Supporting documents explain and test.
+> Toy models illustrate only.
