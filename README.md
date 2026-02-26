@@ -127,3 +127,12 @@ Figures and plots referenced by supporting documents.
 > Regulations govern applicability.
 > Supporting documents explain and test.
 > Toy models illustrate only.
+
+## How to Read This Repository
+
+1. Start with `HPF.md` for the core framework.
+2. Read `Symbol_index.md` to fix notation.
+3. Review `UHET.md` and `QPRCA.md` for governing constraints.
+4. Read `MDEA-HPF.md` for execution and routing logic.
+5. Consult `Regulation/` to see how existing theories are governed.
+6. Use `Supporting_Docs/` for elaboration and empirical context.
